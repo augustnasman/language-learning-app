@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react'
+import Plot from './PitchPlot'
+import PhoneTracePlot from './PhoneTracePlot'
 
 const API = '/api'
 
@@ -25,7 +27,13 @@ interface AnalysisResult {
     phoneme_error_rate: number
     word_error_rate: number
     feedback: string
+    expected_vector?: number[]
+    transcribed_vector?: number[]
   }
+  prosody?: {
+    f0: (number | null)[]
+    energy: (number | null)[]
+  } | null
   acoustic_distance: number
 }
 
@@ -185,6 +193,28 @@ export default function PronunciationPractice() {
           ))}
           {result.differences.errors.length === 0 && (
             <p style={{ color: 'green' }}>No mispronounced words detected!</p>
+          )}
+          {result.prosody && (
+            <div>
+              <h3 style={{ marginBottom: 0 }}>Prosody</h3>
+              <Plot
+                values={result.prosody.f0}
+                color="#ffd54f"
+                label="Pitch (F0)"
+                unit=" Hz"
+              />
+              <Plot
+                values={result.prosody.energy}
+                color="#aed581"
+                label="Energy (RMS)"
+              />
+            </div>
+          )}
+          {(result.differences.expected_vector?.length ?? 0) > 0 && (
+            <PhoneTracePlot
+              expected={result.differences.expected_vector!}
+              heard={result.differences.transcribed_vector!}
+            />
           )}
         </section>
       )}
