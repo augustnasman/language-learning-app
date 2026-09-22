@@ -30,10 +30,11 @@ interface AnalysisResult {
 }
 
 const SENTENCES = [
-  'Hello, how are you?',
-  'The quick brown fox jumps over the lazy dog.',
-  'She sells seashells by the seashore.',
-  'What time will the train arrive?',
+  'Bonjour, comment ça va ?',
+  'Je voudrais un café, s\u2019il vous plaît.',
+  'La tour Eiffel est très belle la nuit.',
+  'Quelle heure est-il ? J\u2019ai un train à prendre.',
+  'Merci beaucoup, à bientôt !',
 ]
 
 function scoreLabel(score: number): { emoji: string; text: string } {
@@ -112,7 +113,7 @@ export default function PronunciationPractice() {
       const form = new FormData()
       form.append('file', blob, 'recording.webm')
       form.append('expected_text', sentence)
-      form.append('lang', 'en')
+        form.append('lang', 'fr')
       const res = await fetch(`${API}/pronunciation`, { method: 'POST', body: form })
       if (!res.ok) throw new Error(`Analysis failed (${res.status})`)
       setResult(await res.json())
@@ -125,7 +126,7 @@ export default function PronunciationPractice() {
 
   function playReference() {
     const utter = new SpeechSynthesisUtterance(sentence)
-    utter.lang = 'en-US'
+    utter.lang = 'fr-FR'
     window.speechSynthesis.speak(utter)
   }
 
