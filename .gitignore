@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+backend/OpenPronounce
+.venv
+dist
+models_cache
