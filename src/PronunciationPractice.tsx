@@ -74,8 +74,20 @@ export default function PronunciationPractice() {
       rec.start()
       recorder.current = rec
       setRecording(true)
-    } catch {
-      setError('Could not access the microphone. Microphone needs https:// or localhost.')
+    } catch (e) {
+      const name = e instanceof DOMException ? e.name : ''
+      if (name === 'NotAllowedError' || name === 'SecurityError') {
+        setError(
+          'Microphone blocked. Check iOS Settings → Brave → Microphone → allow, ' +
+          'then tap Record again.',
+        )
+      } else if (name === 'NotFoundError') {
+        setError('No microphone found on this device.')
+      } else if (window.location.protocol !== 'https:') {
+        setError('Could not access the microphone. Microphone needs https:// or localhost.')
+      } else {
+        setError(`Could not access the microphone (${name || 'unknown error'}).`)
+      }
     }
   }
 
